@@ -7,6 +7,9 @@ class MoviesController < ApplicationController
   end
 
   def index
+    if params[:sorting].nil? && params[:ratings].nil?
+      redirect_to movies_path(:sorting=>session[:sorting], :ratings=>session[:ratings])
+    end  
     @movies = Movie.all
     @all_ratings = Movie.all_ratings
     @rating = params[:ratings]
@@ -16,14 +19,6 @@ class MoviesController < ApplicationController
     else
       sort = params[:sorting]
     end
-    
-    if params[:ratings].nil?
-      @rating = session[:ratings]
-    else
-      @rating = params[:ratings]
-    end
-    
-    
     
     if @rating.nil?
       @ratings_to_show = []
@@ -43,8 +38,6 @@ class MoviesController < ApplicationController
     end
     
     session[:ratings] = @rating
-    
-    
   end
 
   def new
